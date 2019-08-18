@@ -124,6 +124,16 @@ input, button {
             .then(()=> this.props.history.push('/notes'))
             .catch( ex => this.setState({ error: ex.response.data.message }));
         }
+
+        componentDidUpdate() {
+          const { notes, match } = this.props;
+          const text = notes ? notes.find(note => note.id === match.params.id).text : '';
+
+          if (this.state.text !== text) {
+            this.setState({ text });
+          }
+        }
+
         render(){
           const { text, error } = this.state;
           const { update } = this;
@@ -177,7 +187,7 @@ input, button {
                 <Route exact path='/notes' render={ ()=> <Notes destroy={ destroy} archived={ false } notes={ notes} update={ update }/> } />
                 <Route path='/notes/create' render={ ({ history })=> <Create history={ history } create={ create } notes={ notes } /> } />
                 <Route path='/archived' render={ ()=> <Notes destroy={ destroy } archived={ true } notes={ notes} update={ update }/> } />
-                <Route path='/notes/:id' render={ (match) => <Update match={match} history={ history } update={ update } notes={ notes }/>} />
+                <Route path='/notes/:id' render={ ({history, match}) => <Update match={match} history={ history } update={ update } notes={ notes }/>} />
                 <Redirect to='/notes' />
               </Switch>
             </HashRouter>
