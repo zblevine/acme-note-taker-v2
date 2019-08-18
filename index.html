@@ -111,25 +111,30 @@ input, button {
       }
 
       class Update extends Component {
-        constructor(){
+        constructor({notes, match}){
           super(); 
+          console.log(notes);
+          const text = notes.length ? notes.find(note => note.id === match.params.id).text : '';
           this.state = {
-            text: '',
+            text: text,
             error: ''
           };
           this.update = this.update.bind(this);
         }
+        findNote() {
+          const { notes, match } = this.props;
+          return notes.find(note => note.id === match.params.id)
+        }
         update(){
-          this.props.update({ text: this.state.text })
+          this.props.update({ id: this.findNote().id, text: this.state.text })
             .then(()=> this.props.history.push('/notes'))
             .catch( ex => this.setState({ error: ex.response.data.message }));
         }
 
         componentDidUpdate() {
-          const { notes, match } = this.props;
-          const text = notes ? notes.find(note => note.id === match.params.id).text : '';
+          const text = this.findNote().text;
 
-          if (this.state.text !== text) {
+          if (this.state.text === '') {
             this.setState({ text });
           }
         }
