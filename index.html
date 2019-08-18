@@ -113,7 +113,6 @@ input, button {
       class Update extends Component {
         constructor({notes, match}){
           super(); 
-          console.log(notes);
           const text = notes.length ? notes.find(note => note.id === match.params.id).text : '';
           this.state = {
             text: text,
@@ -133,6 +132,7 @@ input, button {
 
         componentDidUpdate() {
           const text = this.findNote().text;
+          console.log(this.findNote());
 
           if (this.state.text === '') {
             this.setState({ text });
